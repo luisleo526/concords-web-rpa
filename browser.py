@@ -7,23 +7,27 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class WebBrowser:
-    def __init__(self, ads_id=None):
+    def __init__(self, ads_id=None, port=50360):
         if ads_id is None:
             self.driver = webdriver.Chrome()
-            self.main_window = self.driver.current_window_handle
             return
 
         self.ads_id = ads_id
+        self.port = port
         resp = self.get_local_api_response()
 
         options = webdriver.ChromeOptions()
         options.add_experimental_option("debuggerAddress", resp["data"]["ws"]["selenium"])
+
         chrome_driver = resp["data"]["webdriver"]
         service = Service(executable_path=chrome_driver)
         self.driver = webdriver.Chrome(service=service, options=options)
 
+        self.driver.fullscreen_window()
+        self.driver.maximize_window()
+
     def get_local_api_response(self):
-        open_url = f"http://localhost:50360/api/v1/browser/start?user_id={self.ads_id}&open_tabs=1"
+        open_url = f"http://localhost:{self.port}/api/v1/browser/start?user_id={self.ads_id}&open_tabs=1"
         resp = requests.get(open_url).json()
         return resp
 

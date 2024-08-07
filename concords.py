@@ -5,7 +5,7 @@ import pytz
 from selenium.webdriver.common.by import By
 
 from browser import WebBrowser
-from schemas import StockOrder, FutureOrder
+from schemas import StockOrder, FutureOrder, TodayFutureOrder
 
 
 class Concords(WebBrowser):
@@ -21,8 +21,8 @@ class Concords(WebBrowser):
 
     TABLE_PATH = '//*[@id="agGrid"]/ag-grid-angular/div/div[1]/div/div[3]/div[2]/div/div'
 
-    def __init__(self, ads_id=None):
-        super().__init__(ads_id)
+    def __init__(self, ads_id=None, port=50360):
+        super().__init__(ads_id, port)
         self.driver.get("https://etradeweb.concords.com.tw/itrader/#/UserLogin")
         time.sleep(5)
 
@@ -44,7 +44,7 @@ class Concords(WebBrowser):
         entries = table.find_elements(By.XPATH, './div')
         return entries
 
-    def get_history_stock_orders(self, days=3):
+    def get_history_stock_orders(self, days=3) -> list[StockOrder]:
         history_orders_path = '/html/body/app-root/app-main-frame/div[2]/app-bill-frame/div/aside/div/div[2]/ul/li/ul/li[2]/a'
         self.click_button(history_orders_path)
 
@@ -62,7 +62,7 @@ class Concords(WebBrowser):
         table = self.get_element(table_xpath)
         orders = table.find_elements(By.XPATH, 'div')
 
-        print('orders:', len(orders))
+        print(f'過去歷史{days}天的證券委託數量:', len(orders))
 
         objects = []
         for order in orders:
@@ -71,7 +71,7 @@ class Concords(WebBrowser):
 
         return objects
 
-    def get_history_future_orders(self, days=3):
+    def get_history_future_orders(self, days=3) -> list[FutureOrder]:
         history_orders_xpath = '/html/body/app-root/app-main-frame/div[2]/app-bill-frame/div/aside/div/div[2]/ul/li/ul/li[2]/a'
         self.click_button(history_orders_xpath)
 
@@ -89,11 +89,30 @@ class Concords(WebBrowser):
         table = self.get_element(table_xpath)
         orders = table.find_elements(By.XPATH, 'div')
 
-        print('orders:', len(orders))
+        print(f'過去歷史{days}天的期貨委託數量:', len(orders))
 
         objects = []
         for order in orders:
             cells = [cell.text for cell in order.find_elements(By.XPATH, 'div')]
             objects.append(FutureOrder.from_list_data(cells))
+
+        return objects
+
+    def get_today_future_orders(self) -> list[TodayFutureOrder]:
+        today_future_orders_xpath = '/html/body/app-root/app-main-frame/div[2]/app-bill-frame/div/aside/div/div[2]/ul/li/ul/li[1]/a'
+        self.click_button(today_future_orders_xpath)
+
+        time.sleep(5)
+
+        table_xpath = '//*[@id="agGrid"]/ag-grid-angular/div/div[1]/div/div[3]/div[2]/div/div'
+        table = self.get_element(table_xpath)
+        orders = table.find_elements(By.XPATH, 'div')
+
+        print(f'今日期貨委託數量:', len(orders))
+
+        objects = []
+        for order in orders:
+            cells = [cell.text for cell in order.find_elements(By.XPATH, 'div')][1:]
+            objects.append(TodayFutureOrder.from_list_data(cells))
 
         return objects

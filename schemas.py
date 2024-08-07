@@ -35,6 +35,46 @@ class StockOrder(BaseModel):
         )
 
 
+class TodayFutureOrder(BaseModel):
+    state: str = Field(description='狀態')
+    order_time: str = Field(description='委託時間')
+    recv_order_time: str = Field(description='委託時間')
+    order_id: str = Field(description='委託單號')
+    option_type: str = Field(description='期權別')
+    trade_type: str = Field(description='交易類別')
+    market: str = Field(description='商品名稱')
+    order_price: str = Field(description='價格')
+    order_amount: str = Field(description='口數')
+    cancel_amount: str = Field(description='取消口數')
+    fill_amount: str = Field(description='成交口數')
+    rest_amount: str = Field(description='尚未成交口數')
+    position_action: str = Field(description='倉位動作')
+    order_condition: str = Field(description='委託條件')
+    action_device: str = Field(description='下單裝置')
+    market_type: str = Field(description='盤別')
+
+    @staticmethod
+    def from_list_data(data: List[str]):
+        return TodayFutureOrder(
+            state=data[0],
+            order_time=data[1],
+            recv_order_time=data[2],
+            order_id=data[3],
+            option_type=data[4],
+            trade_type=data[5],
+            market=data[6],
+            order_price=data[7],
+            order_amount=data[8],
+            cancel_amount=data[9],
+            fill_amount=data[10],
+            rest_amount=data[11],
+            position_action=data[12],
+            order_condition=data[13],
+            action_device=data[14],
+            market_type=data[15]
+        )
+
+
 class FutureOrder(BaseModel):
     order_date: str = Field(description='委託日期')
     order_time: str = Field(description='委託時間')
