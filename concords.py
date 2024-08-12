@@ -27,8 +27,8 @@ class Concords(WebBrowser):
         time.sleep(5)
 
     def login(self, account, password):
-        self.inset_text(Concords.ACCOUNT_FIELD_XPATH, account)
-        self.inset_text(Concords.PASSWORD_FIELD_XPATH, password)
+        self.insert_text(Concords.ACCOUNT_FIELD_XPATH, account)
+        self.insert_text(Concords.PASSWORD_FIELD_XPATH, password)
         self.click_button(Concords.LOGIN_BUTTON_XPATH)
         time.sleep(5)
         self.click_button(Concords.ACCOUNT_PANEL_XPATH)
@@ -51,7 +51,7 @@ class Concords(WebBrowser):
         # Asia/Taipei, three days ago
         time_str = (datetime.now(pytz.timezone('Asia/Taipei')) - timedelta(days=days)).strftime('%Y-%m-%d')
 
-        self.inset_text('//*[@id="main"]/form[2]/div[1]/input', time_str, clear=True)
+        self.insert_text('//*[@id="main"]/form[2]/div[1]/input', time_str, clear=True)
 
         search_btn_xpath = '//*[@id="main"]/form[1]/div[3]/div[2]/button'
         self.click_button(search_btn_xpath)
@@ -78,7 +78,7 @@ class Concords(WebBrowser):
         # Asia/Taipei, three days ago
         time_str = (datetime.now(pytz.timezone('Asia/Taipei')) - timedelta(days=days)).strftime('%Y-%m-%d')
 
-        self.inset_text('//*[@id="main"]/form[2]/div[1]/input', time_str, clear=True)
+        self.insert_text('//*[@id="main"]/form[2]/div[1]/input', time_str, clear=True)
 
         search_btn_xpath = '//*[@id="main"]/form[1]/div[4]/button'
         self.click_button(search_btn_xpath)

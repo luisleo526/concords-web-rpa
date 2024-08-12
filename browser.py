@@ -1,7 +1,11 @@
+from typing import Union
+
 import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -31,23 +35,33 @@ class WebBrowser:
         resp = requests.get(open_url).json()
         return resp
 
-    def get_element(self, xpath):
-        element = WebDriverWait(self.driver, 30).until(
+    def get_element(self, xpath, driver: Union[WebDriver, WebElement] = None):
+
+        if driver is None:
+            driver = self.driver
+
+        element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, xpath))
         )
+
         return element
 
-    def get_elements(self, xpath):
-        elements = WebDriverWait(self.driver, 30).until(
+    def get_elements(self, xpath, driver: Union[WebDriver, WebElement] = None):
+
+        if driver is None:
+            driver = self.driver
+
+        elements = WebDriverWait(driver, 30).until(
             EC.presence_of_all_elements_located((By.XPATH, xpath))
         )
+
         return elements
 
     def click_button(self, xpath):
         button = self.get_element(xpath)
         button.click()
 
-    def inset_text(self, xpath, text, clear=False):
+    def insert_text(self, xpath, text, clear=False):
         field = self.get_element(xpath)
         if clear:
             field.clear()
