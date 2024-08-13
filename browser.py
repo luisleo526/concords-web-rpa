@@ -21,14 +21,16 @@ class WebBrowser:
         resp = self.get_local_api_response()
 
         options = webdriver.ChromeOptions()
+        options.add_argument('--start-maximized')
+        options.add_argument('--disable-gpu')
         options.add_experimental_option("debuggerAddress", resp["data"]["ws"]["selenium"])
 
         chrome_driver = resp["data"]["webdriver"]
         service = Service(executable_path=chrome_driver)
         self.driver = webdriver.Chrome(service=service, options=options)
 
-        self.driver.fullscreen_window()
-        self.driver.maximize_window()
+        # self.driver.fullscreen_window()
+        # self.driver.maximize_window()
 
     def get_local_api_response(self):
         open_url = f"http://localhost:{self.port}/api/v1/browser/start?user_id={self.ads_id}&open_tabs=1"
