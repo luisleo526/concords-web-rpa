@@ -29,8 +29,16 @@ class WebBrowser:
         service = Service(executable_path=chrome_driver)
         self.driver = webdriver.Chrome(service=service, options=options)
 
-        # self.driver.fullscreen_window()
-        # self.driver.maximize_window()
+    def maximize_window(self):
+        try:
+            self.driver.fullscreen_window()
+        except:
+            pass
+
+        try:
+            self.driver.maximize_window()
+        except:
+            pass
 
     def get_local_api_response(self):
         open_url = f"http://localhost:{self.port}/api/v1/browser/start?user_id={self.ads_id}&open_tabs=1"
