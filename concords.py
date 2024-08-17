@@ -27,8 +27,8 @@ class Concords(WebBrowser):
         time.sleep(5)
 
     def login(self, account, password):
-        self.insert_text(Concords.ACCOUNT_FIELD_XPATH, account)
-        self.insert_text(Concords.PASSWORD_FIELD_XPATH, password)
+        self.insert_text(Concords.ACCOUNT_FIELD_XPATH, account, clear=True)
+        self.insert_text(Concords.PASSWORD_FIELD_XPATH, password, clear=True)
         self.click_button(Concords.LOGIN_BUTTON_XPATH)
         time.sleep(5)
         self.click_button(Concords.ACCOUNT_PANEL_XPATH)
