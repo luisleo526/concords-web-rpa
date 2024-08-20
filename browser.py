@@ -4,6 +4,7 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -71,8 +72,13 @@ class WebBrowser:
         button = self.get_element(xpath)
         button.click()
 
-    def insert_text(self, xpath, text, clear=False):
+    def insert_text(self, xpath, text, clear=False, clear_with_keys=False, press_return=False):
         field = self.get_element(xpath)
         if clear:
             field.clear()
+        if clear_with_keys:
+            field.send_keys(Keys.CONTROL + "a")
+            field.send_keys(Keys.DELETE)
         field.send_keys(text)
+        if press_return:
+            field.send_keys(Keys.RETURN)
